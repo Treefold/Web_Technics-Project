@@ -1,0 +1,139 @@
+/* Common to all pages */
+/**/
+body {
+    margin: 0;
+    background: url("Img/Background.png");
+}
+
+.main {
+    text-align: center;
+    max-width: 1024px;  
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+header {
+    text-align: center;
+    background: white;
+    position: sticky;
+    top: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    z-index: 1;
+}
+
+footer {
+    text-align: center;
+    background: #ffc171;
+    padding: 10px 0;
+}
+footer h5, footer h6 {
+    margin: 0;
+}
+
+#Cuprins {
+  display: none;
+}
+
+.Meniu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+/*    background: #d2d3d7;*/
+}
+
+.Meniu div {
+    display: inline;
+    margin: 0px 5px;
+}
+.Meniu div:nth-child(2n) {
+    background-color: #ffc171;
+}
+.Meniu div:nth-child(2n+1) {
+    background-color: #f9edd8;
+}
+
+@media screen and (max-width: 600px) {
+    .main {
+        padding: 0 20px;
+    }
+    .Meniu {
+        display: none;
+    }
+    #Cuprins{
+        position: relative;
+        background-color: #3498DB;
+        color: white;
+        padding: 2px;
+        margin-bottom: 5px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+    #Cuprins {
+        display: inline-block;
+    }
+    header:hover #Cuprins, header:focus #Cuprins {
+        display: none;
+    }
+    header:hover .Meniu, header:focus .Meniu {
+        display: block;        
+    }
+}
+
+table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+}
+
+ol {
+    text-align: left;
+}
+/* Main Page */
+.home .receipePhoto {
+    display: inline-block;
+    width: 40%;
+    background: white;
+    margin: 0 3%;
+}
+.receipePhoto + .receipePhoto {
+    margin-bottom: 20px;    
+}
+.home img {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+}
+.home .hover {
+    display: none;
+}
+.home img:hover {
+    opacity: .8;
+}
+.home img:hover + .hover {
+/*    display: block;*/
+}
+
+@media screen and (max-width: 600px) {
+    .home .receipePhoto {
+        display: block;
+        width: 100%;
+        margin: 0;
+    }
+    
+}
+/* Floating Island Page */
+
+/* Creme Brulee Page */
+
+/* Chocoflan Page */
+
+/* Tort foi de zahat ars Page */
+
+/**/
