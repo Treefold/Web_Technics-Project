@@ -34,14 +34,39 @@
   solveb.appendChild(document.createTextNode('\u0020'));
   body.appendChild(solveb);
   
-  //Delete button
+  //min sudoku button
+  var minb = document.createElement('button');
+  minb.style.backgroundColor = 'yellow';
+  minb.addEventListener("click",  function(){deleteAll();createSudoku("Min");});
+  minb.innerHTML = "min Sudoku";
+  minb.appendChild(document.createTextNode('\u0020'));
+  body.appendChild(minb);
+
+  //decimal sudoku button
+  var decb = document.createElement('button');
+  decb.style.backgroundColor = 'yellow';
+  decb.addEventListener("click", function(){deleteAll();createSudoku("Dec");});
+  decb.innerHTML = "dec Sudoku";
+  decb.appendChild(document.createTextNode('\u0020'));
+  body.appendChild(decb);
+  
+  //hex button
   var deleteAllb = document.createElement('button');
   deleteAllb.style.backgroundColor = 'yellow';
-  deleteAllb.addEventListener("click", deleteAll);
-  deleteAllb.innerHTML = "Delete All";
+  deleteAllb.addEventListener("click", function(){deleteAll();createSudoku("Hex");});
+  deleteAllb.innerHTML = "hex Sudoku";
   deleteAllb.appendChild(document.createTextNode('\u0020'));
   body.appendChild(deleteAllb);
-  createSudoku ();//"Hex");
+  
+  // // Delete button
+  // var deleteAllb = document.createElement('button');
+  // deleteAllb.style.backgroundColor = 'yellow';
+  // deleteAllb.addEventListener("click", deleteAll);
+  // deleteAllb.innerHTML = "Delete All";
+  // deleteAllb.appendChild(document.createTextNode('\u0020'));
+  // body.appendChild(deleteAllb);
+
+  createSudoku("Dec");
 }  
 )();
 
@@ -123,28 +148,18 @@ function zoneOf (i, j){
 }
 
 function deleteAll() {
-  var table = document.getElementById ("Sudoku");
-  for (var tr of table.childNodes) {
-    for (var tb of tr.childNodes) {
-       tb.remove (tb.firstChild);
-       tr.remove (tb);
-    }
-    table.remove (tr);
-  }
-  var tr = document.getElementById ("SudokuChoices").firstChild;
-  for (var tb of tr.childNodes) {
-    tb.remove (tb.firstChild);
-    tr.remove (tb)
+  for (var del of document.querySelectorAll("#Sudoku td, #SudokuChoices td, #Sudoku tr, #SudokuChoices tr")) {
+    del.remove (del.firstChild);
   }
 }
 
 function clear(){
   var choises = document.getElementsByClassName("choice");
-  for (var i = 0; i < g_SudokuZoneSize; ++i){
+  for (var i = 0; i < g_SudokuLineSize; ++i){
     choises[i].style.backgroundColor = 'yellow';
   }
   var boxes = document.getElementsByClassName("box");
-  for (var i = 0; i < g_SudokuZoneSize * g_SudokuZoneSize; ++i){
+  for (var i = 0; i < g_SudokuLineSize * g_SudokuLineSize; ++i){
     boxes[i].style.backgroundColor = 'yellow';
     boxes[i].innerHTML = '#';
   }
