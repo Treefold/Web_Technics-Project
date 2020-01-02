@@ -99,7 +99,7 @@ function createSudoku (type = "Dec") {
       button.classList.add("line" + String(i));
       button.classList.add("col" + String(j));
       button.id = "box" + String(zoneOf(i, j)) + "-" + String(i) + "-" + String(j);
-      button.addEventListener("click", function(){selectBox(this);});
+      button.addEventListener("click", function(){selectBox(this);}, true);
       button.innerHTML = "#";
       button.appendChild(document.createTextNode('\u0020'));
       td.appendChild(button);
@@ -177,15 +177,15 @@ function clear(){
 }
 
 function selectChoice (choice){
-  // if a choice is selected => deselect it
-  if (choice.style.backgroundColor == 'green'){
+  // if the choice is selected => deselect it
+  if (getComputedStyle(choice, null).getPropertyValue("background-color") == "rgb(0, 128, 0)") {
     choice.style.backgroundColor = 'yellow';
     return;
   }
   // deselect all selecte choises
   let listChoice = document.getElementsByClassName('choice');
-  for (i = 0; i <= g_SudokuLineSize; ++i){
-    listChoice[i].style.backgroundColor = 'yellow';
+  for (let ch of listChoice){
+    ch.style.backgroundColor = 'yellow';
   }
   choice.style.backgroundColor = 'green'; // select your actual choice
 }
@@ -231,19 +231,21 @@ function selectBox (box) {
   }
 }
 
+var emergencyStopped;
+
 function solve(){
   let startSolve = new Date();
-  var mat = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]];
-  var tra = [0];
-  var z = [0]
+  let mat = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]];
+  let tra = [0];
+  let z = [0]
   tra["# "] = tra["#"] = 0;
-  for (var i = 0; i <= g_SudokuLineSize; ++i){
+  for (let i = 0; i <= g_SudokuLineSize; ++i){
     tra[i.toString(16) + " "] = i + (g_sudokuType != "Hex" ? 0 : 1);
     mat[i][0] = mat[0][i] = z[i] = 0;
   }
-  var boxes = document.getElementsByClassName("box");
-  for (var i = 1; i <= g_SudokuLineSize; ++i){
-    for (var j = 1; j <= g_SudokuLineSize; ++j){
+  let boxes = document.getElementsByClassName("box");
+  for (let i = 1; i <= g_SudokuLineSize; ++i){
+    for (let j = 1; j <= g_SudokuLineSize; ++j){
       mat[i][j] = tra[boxes[g_SudokuLineSize * (i - 1) + j - 1].innerHTML];
       if (mat[i][j]){
         ++mat[i][0];
@@ -299,7 +301,7 @@ function solve(){
     for (n = 1; n <= g_SudokuLineSize; ++n){
       if (z[n] == g_SudokuLineSize - 1)
       {
-        var v = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let v = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         i = Math.trunc(n / g_SudokuZoneSize);
         if (n % g_SudokuZoneSize != 0){ ++i;}
         j = n - (i - 1) * g_SudokuZoneSize;
@@ -326,8 +328,8 @@ function solve(){
   }
   sig();
   
-  var ln = [];
-  var col = [];
+  let ln = [];
+  let col = [];
   n = 0;
   for (i = 1; i <= g_SudokuLineSize; ++i){
       for (j = 1; j <= g_SudokuLineSize; ++j){
@@ -375,9 +377,9 @@ function solve(){
       }
       n = 0;
     }
-    if (k > n){return;}
+    if (k > n) {return;}
 
-    for (let ii = 1 ; ii <= g_SudokuLineSize; ++ii){
+    for (let ii = 1 ; ii <= g_SudokuLineSize && !emergencyStopped; ++ii){
       if (verif (ln[k], col[k], ii)){
         mat[ln[k]][col[k]] = ii;
         bac(k + 1);
@@ -385,8 +387,19 @@ function solve(){
       }
     }
   }
+
+  emergencyStopped = false;
+  function emergencyStop (st){
+    let finSolve = new Date();
+    if (!confirm(String(finSolve - startSolve) + "milisecond have already passed \n Would you like to continue?")) {
+      emergencyStopped = true;
+    }
+  }
+
+  let emergencyInterval = setInterval(emergencyStop, 5000, startSolve);
   bac(1); 
   let finSolve = new Date();
+  clearInterval (emergencyInterval);
   alert (finSolve - startSolve);
   if (n != 0) {alert("Impossible to Solve!");} 
 }
