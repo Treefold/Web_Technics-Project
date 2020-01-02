@@ -116,9 +116,6 @@ ol {
 .home img:hover {
     opacity: .8;
 }
-.home img:hover + .hover {
-/*    display: block;*/
-}
 
 @media screen and (max-width: 600px) {
     .home .receipePhoto {
