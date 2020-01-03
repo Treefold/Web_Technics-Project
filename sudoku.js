@@ -1,3 +1,5 @@
+
+var g_SudokuZoneSize, g_SudokuLineSize, g_sudokuType;
 (function () {
   //create Sudoku game table
   let body = document.body;
@@ -66,11 +68,13 @@
   // deleteAllb.appendChild(document.createTextNode('\u0020'));
   // body.appendChild(deleteAllb);
 
-  createSudoku("Dec");
+  g_sudokuType = window.localStorage.getItem("Type");
+
+  if (g_sudokuType == undefined || g_sudokuType == null) {g_sudokuType = "Dec";}
+
+  createSudoku(g_sudokuType);
 }  
 )();
-
-var g_SudokuZoneSize, g_SudokuLineSize, g_sudokuType;
 
 function createSudoku (type = "Dec") {
 
@@ -83,7 +87,11 @@ function createSudoku (type = "Dec") {
 
   g_sudokuType = type;
 
+  window.localStorage.setItem("Type", g_sudokuType);
+
   g_SudokuLineSize = g_SudokuZoneSize * g_SudokuZoneSize;
+
+  let mat = readStorage();
 
   let tableSudoku = document.getElementById ('Sudoku');
   for (let i = 1; i <= g_SudokuLineSize; ++i) {
@@ -100,7 +108,7 @@ function createSudoku (type = "Dec") {
       button.classList.add("col" + String(j));
       button.id = "box" + String(zoneOf(i, j)) + "-" + String(i) + "-" + String(j);
       button.addEventListener("click", function(){selectBox(this);}, true);
-      button.innerHTML = "#";
+      button.innerHTML = (mat == null) ? "#" : mat[i-1][j-1];
       button.appendChild(document.createTextNode('\u0020'));
       td.appendChild(button);
       tr.appendChild(td);
@@ -225,10 +233,13 @@ function selectBox (box) {
   }
   if (noChoice){return;} // no choice selected => no action needed
   if (box.innerHTML === choice.innerHTML){return;} // same number => wish granted already => no action needed
-  if (choice.id == "Delete"){ box.innerHTML = "#"; return;} //just delete the curent number from the box
-  if (testBox (box, choice)){ //test if the choice fits in the box
-    box.innerHTML = choice.innerHTML; //as the master wishes
+  if (choice.id == "Delete"){box.innerHTML = "#";} //just delete the curent number from the box
+  else {
+    if (testBox (box, choice)){ //test if the choice fits in the box
+      box.innerHTML = choice.innerHTML; //as the master wishes
+    }
   }
+  writeStorage (readPageMatrix());
 }
 
 var emergencyStopped;
@@ -238,15 +249,15 @@ function solve(){
   let mat = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]];
   let tra = [0];
   let z = [0]
-  tra["# "] = tra["#"] = 0;
+  tra["#"] = 0;
   for (let i = 0; i <= g_SudokuLineSize; ++i){
-    tra[i.toString(16) + " "] = i + (g_sudokuType != "Hex" ? 0 : 1);
+    tra[i.toString(16)] = i + (g_sudokuType != "Hex" ? 0 : 1);
     mat[i][0] = mat[0][i] = z[i] = 0;
   }
   let boxes = document.getElementsByClassName("box");
   for (let i = 1; i <= g_SudokuLineSize; ++i){
     for (let j = 1; j <= g_SudokuLineSize; ++j){
-      mat[i][j] = tra[boxes[g_SudokuLineSize * (i - 1) + j - 1].innerHTML];
+      mat[i][j] = tra[boxes[g_SudokuLineSize * (i - 1) + j - 1].innerHTML.split(' ').join('')];
       if (mat[i][j]){
         ++mat[i][0];
         ++mat[0][j];
@@ -402,4 +413,33 @@ function solve(){
   clearInterval (emergencyInterval);
   alert (finSolve - startSolve);
   if (n != 0) {alert("Impossible to Solve!");} 
+}
+
+function readPageMatrix() {
+  let mat = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]];
+  let boxes = document.getElementsByClassName("box");
+  for (let i = 0; i < g_SudokuLineSize; ++i){
+    for (let j = 0; j < g_SudokuLineSize; ++j){
+      mat[i][j] = boxes[g_SudokuLineSize * i + j ].innerHTML;
+    }
+  }
+  return mat;
+}
+
+function writePageMatrix(mat) {
+  let boxes = document.getElementsByClassName("box");
+  for (let i = 0; i < g_SudokuLineSize; ++i){
+    for (let j = 0; j < g_SudokuLineSize; ++j){
+      boxes[g_SudokuLineSize * i + j ].innerHTML = mat[i][j];
+    }
+  }
+}
+
+function writeStorage (mat) {
+  window.localStorage.setItem(g_sudokuType, JSON.stringify(mat));
+}
+
+function readStorage () {
+  // if that sudoku type wasn't saved return null
+  return JSON.parse(window.localStorage.getItem(g_sudokuType));
 }
