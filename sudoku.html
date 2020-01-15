@@ -256,15 +256,17 @@
       var emergencyStopped;
 
       function solve(){
-        var xhttp = new XMLHttpRequest();
+        let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
+            console.log("DONE");
             alert (JSON.parse(this.responseText));
+            //writePageMatrix (JSON.parse(this.responseText));
           }
         };
         xhttp.open("POST", "http://localhost:7000/", true);
-        xhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
-        xhttp.send(JSON.stringify("data"));
+        xhttp.setRequestHeader(g_sudokuType, JSON.stringify(readPageMatrix()));
+        xhttp.send();
         
         //request.send(JSON.stringify(readPageMatrix()));
 

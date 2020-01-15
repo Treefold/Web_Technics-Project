@@ -244,20 +244,20 @@ function selectBox (box) {
 
 var emergencyStopped;
 
-function solve(){
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    //if (this.readyState == 4 && this.status == 200) {
-      alert (this.responseText);
-    //}
-  };
-  xhttp.open("GET", "http://localhost:7000/", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("data");
+// function solve(){
+//   var xhttp = new XMLHttpRequest();
+//   xhttp.onreadystatechange = function() {
+//     //if (this.readyState == 4 && this.status == 200) {
+//       alert (this.responseText);
+//     //}
+//   };
+//   xhttp.open("POST", "http://localhost:7000/", true);
+//   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//   xhttp.send("data");
   
-  //request.send(JSON.stringify(readPageMatrix()));
+//   //request.send(JSON.stringify(readPageMatrix()));
 
-  return null;
+  // return null;
   let startSolve = new Date();
   let mat = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]];
   let tra = [0];
