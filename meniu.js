@@ -1,10 +1,16 @@
 function MeniuSetup() {
  
-    // let semnificativ
     // 3 parametru pt listener
-    // radio
-    // eveniment-o proprietate (pageX, key, target, etc)
     // get computed style
-    // methoda array
+    
+
+    // Not sure
+    // let semnificativ - I have a "semnificativ var" in "sudoku.html" named "inter"
+
+    // -- Done --
+
+    // methoda array - fill()
+    // radio - select the sudoku type
+    // eveniment-o proprietate (pageX, key, target, etc) - on key pressed select the key
 
 }
